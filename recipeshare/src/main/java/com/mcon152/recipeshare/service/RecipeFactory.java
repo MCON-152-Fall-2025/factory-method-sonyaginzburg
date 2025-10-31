@@ -19,12 +19,15 @@ public class RecipeFactory {
             case "DAIRY":
                 out = new DairyRecipe();
                 break;
+            case "SOUP":
+                out = new SoupRecipe();
+                break;
             case "BASIC":
             default:
                 out = new BasicRecipe();
                 break;
         }
-
+ 
          // Ensure new entity and safely copy common fields only if req provided
         out.setId(null);
         if (req != null) {
@@ -33,6 +36,10 @@ public class RecipeFactory {
             out.setIngredients(req.getIngredients());
             out.setInstructions(req.getInstructions());
             out.setServings(req.getServings());
+        }
+        // if soup recipe, get spice level?
+        if (out instanceof SoupRecipe) {
+            ((SoupRecipe) out).setSpiceLevel(req.getSpiceLevel());
         }
 
         return out;

@@ -66,7 +66,51 @@ class RecipeControllerTest {
     @Nested
     class CreationTests {
 
+        // Write a MockMvc test that POSTs a SoupRecipe and asserts 201 + Location header
         @Test
+        void testAddSoupRecipe() throws Exception {
+            ObjectNode json = mapper.createObjectNode();
+            json.put("type", "SOUP");
+            json.put("title", "Chicken Soup");
+            json.put("description", "Warm and comforting chicken soup");
+            json.put("ingredients", "Chicken, water, vegetables");
+            json.put("instructions", "Put in a pot and simmer");
+            json.put("servings", 6);
+            json.put("spiceLevel", "medium");
+            String jsonString = mapper.writeValueAsString(json);
+
+            // thenAnswer: assign ID dynamically based on the request body
+            when(recipeService.addRecipe(any(Recipe.class))).thenAnswer(invocation -> {
+                Recipe r = invocation.getArgument(0);
+                return new Recipe(1L, r.getTitle(), r.getDescription(), r.getIngredients(), r.getInstructions(), 6);
+            });
+
+            mockMvc.perform(post("/api/recipes")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(jsonString))
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.title").value("Chicken Soup"))
+                    .andExpect(jsonPath("$.description").value("Warm and comforting chicken soup"))
+                    .andExpect(jsonPath("$.ingredients").value("Chicken, water, vegetables"))
+                    .andExpect(jsonPath("$.instructions").value("Put in a pot and simmer"))
+                    .andExpect(jsonPath("$.id").value(1));
+
+            // capture the Recipe passed into service
+            verify(recipeService).addRecipe(recipeCaptor.capture());
+            Recipe captured = recipeCaptor.getValue();
+            assertNull(captured.getId()); // ID is assigned in service, controller passes no ID
+            assertEquals("Chicken Soup", captured.getTitle());
+            assertInstanceOf(SoupRecipe.class, captured);
+
+            // verify order (only addRecipe is expected in this flow)
+            InOrder order = inOrder(recipeService);
+            order.verify(recipeService).addRecipe(any(Recipe.class));
+
+            // ensure nothing else on the service was called
+            verifyNoMoreInteractions(recipeService);
+        }
+
+            @Test
         void testAddRecipe_thenAnswer_andArgumentCaptor_andInOrder_andNoMoreInteractions() throws Exception {
             ObjectNode json = mapper.createObjectNode();
             json.put("type", "BASIC");
@@ -107,6 +151,7 @@ class RecipeControllerTest {
             // ensure nothing else on the service was called
             verifyNoMoreInteractions(recipeService);
         }
+
 
         @ParameterizedTest
         @CsvSource({
