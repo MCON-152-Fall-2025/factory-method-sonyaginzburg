@@ -79,6 +79,7 @@ class RecipeControllerTest {
             json.put("spiceLevel", "medium");
             String jsonString = mapper.writeValueAsString(json);
 
+
             // thenAnswer: assign ID dynamically based on the request body
             when(recipeService.addRecipe(any(Recipe.class))).thenAnswer(invocation -> {
                 Recipe r = invocation.getArgument(0);

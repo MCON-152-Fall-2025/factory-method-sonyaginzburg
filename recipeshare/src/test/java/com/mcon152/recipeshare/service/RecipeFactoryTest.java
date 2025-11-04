@@ -51,6 +51,7 @@ class RecipeFactoryTest {
         assertTrue(r instanceof SoupRecipe);
     }
 
+
     @Test
     void nullRequest_returnsBasic_withNullFields() {
         Recipe r = RecipeFactory.createFromRequest(null);

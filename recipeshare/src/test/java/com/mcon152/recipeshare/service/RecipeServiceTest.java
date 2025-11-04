@@ -123,6 +123,7 @@ class RecipeServiceTest {
     @DisplayName("getAllRecipes()")
     class GetAllRecipes {
 
+
         @Test
         @DisplayName("returns list from repository")
         void returnsList() {

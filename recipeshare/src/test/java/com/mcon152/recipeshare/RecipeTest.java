@@ -16,6 +16,7 @@ class RecipeTest {
         assertEquals(Integer.valueOf(8), recipe.getServings());
     }
 
+
     @Test
     void testSubtypeInstances_andFields() {
         BasicRecipe basic = new BasicRecipe(2L, "Toast", "Buttery toast", "Bread, Butter", "Toast bread and spread butter", 1);
