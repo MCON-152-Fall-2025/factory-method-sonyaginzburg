@@ -27,7 +27,7 @@ public class RecipeFactory {
                 out = new BasicRecipe();
                 break;
         }
- 
+        // extra comment so I can recommit
          // Ensure new entity and safely copy common fields only if req provided
         out.setId(null);
         if (req != null) {

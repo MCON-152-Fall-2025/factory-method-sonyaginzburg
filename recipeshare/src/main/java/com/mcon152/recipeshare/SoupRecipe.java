@@ -2,7 +2,7 @@ package com.mcon152.recipeshare;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-// extra comment so I can recommit
+// another extra comment so i can recommit
 @Entity
 @DiscriminatorValue("SOUP")
 public class SoupRecipe extends Recipe {
